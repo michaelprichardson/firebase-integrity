@@ -1,1 +1,1 @@
-# firebase-integrity
+# firebase-integrity 🔥
