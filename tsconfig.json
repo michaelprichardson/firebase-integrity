@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "lib",
+    "declaration": true,
+    "target": "es2018",
+    "inlineSourceMap": true,
+    "moduleResolution": "node"
+  },
+  "compileOnSave": true,
+  "include": ["src"],
+  "exclude": ["src/__tests__"]
+}
