@@ -28,6 +28,7 @@ jobs:
         run: npm test
 
   package:
+    name: "Package"
     needs: build
     runs-on: ubuntu-latest
     
