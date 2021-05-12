@@ -9,8 +9,10 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "build": "rm -rf lib/ && npm run lint && tsc",
-    "test": "jest",
-    "test:ci": "jest"
+    "test": "npm run test:verbose -- --silent",
+    "test:verbose": "jest --runInBand --config jest.config.ts",
+    "test:ci": "jest --runInBand --config jest.config.ts --silent --coverage --reporters=\"default\" --reporters=\"jest-junit\"",
+    "emulator": "firebase emulators:start --only firestore,database,pubsub"
   },
   "repository": {
     "type": "git",

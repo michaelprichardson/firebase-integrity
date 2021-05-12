@@ -1,38 +1,52 @@
 import {
   Change,
   EventContext,
-  firestore as firebaseFunctions,
+  firestore,
   logger
 } from 'firebase-functions';
 import { Config } from '../common/config';
 import { FirestoreIntegrityConfig } from '../common/rules';
+import { processFirestoreRule } from './processRule';
 
 export const processFirestoreTrigger = async (
   firebaseConfig: Config,
   integrityConfig: FirestoreIntegrityConfig,
-  snapshot: firebaseFunctions.QueryDocumentSnapshot | Change<firebaseFunctions.QueryDocumentSnapshot>,
+  snapshot: firestore.QueryDocumentSnapshot | Change<firestore.QueryDocumentSnapshot>,
   context: EventContext,
 ) => {
-  const { firestore, database, storage } = integrityConfig.rules;
+  const { firestoreRules, databaseRules, storageRules } = integrityConfig.rules;
+
+  const promises = [];
 
   // Check if there are any rules for Firestore
-  if (firestore.length) {
-    logger.info('TODO: Need to be implemented');
+  if (firestoreRules.length) {
+    for (const firestoreRule of firestoreRules) {
+      promises.push(processFirestoreRule(
+        firebaseConfig,
+        integrityConfig.type,
+        integrityConfig.documentPath,
+        firestoreRule,
+        snapshot,
+        context,
+      ))
+    }
   } else {
     logger.warn('No rules for Firestore');
   }
 
   // Check if there are any rules for Database
-  if (database.length) {
+  if (databaseRules.length) {
     logger.info('TODO: Need to be implemented');
   } else {
     logger.warn('No rules for Database');
   }
 
   // Check if there are any rules for Storage
-  if (storage.length) {
+  if (storageRules.length) {
     logger.info('TODO: Need to be implemented');
   } else {
     logger.warn('No rules for Storage');
   }
+
+  await Promise.all(promises);
 }

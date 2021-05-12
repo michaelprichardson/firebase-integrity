@@ -1,7 +1,7 @@
 import { CloudFunction, firestore } from 'firebase-functions';
 import { FirestoreIntegrityConfig, FirestoreEventType } from 'src/common/rules';
 import { Config } from 'src/common/config';
-import { processFirestoreTrigger } from 'src/firestore/process';
+import { processFirestoreTrigger } from 'src/firestore/processFunction';
 
 export const createFirestoreTrigger = (firebaseConfig: Config, integrityConfig: FirestoreIntegrityConfig): CloudFunction<any> => {
   if (integrityConfig.type === FirestoreEventType.OnCreate) {

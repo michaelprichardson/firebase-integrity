@@ -12,15 +12,33 @@ export enum DatabaseEventType {
   OnUpdate,
 }
 
-export type Rule = {
-  path: string
-  field: boolean
+export enum Action {
+  CreateField,
+  ReplicateDocument,
+  IncrementField,
+  DeleteField,
+  DeleteDocument,
+  DecrementField,
+  UpdateField,
+  UpdateDocument,
 }
 
-export type FirebaseRules = {
-  database?: Rule[]
-  firestore?: Rule[]
-  storage?: Rule[]
+export type BaseRule = {
+  action: Action
+  path: string
+  field?: {
+    key: string
+    value: string
+  }
+  incrementField?: string
+  decrementField?: string
+  updateField?: string
+};
+
+export type IntegrityRules = {
+  databaseRules?: BaseRule[]
+  firestoreRules?: BaseRule[]
+  storageRules?: BaseRule[]
 }
 
 export type Hook<T> = (
@@ -31,7 +49,7 @@ export type Hook<T> = (
 export type FirestoreIntegrityConfig = {
   type: FirestoreEventType
   documentPath: string
-  rules: FirebaseRules
+  rules: IntegrityRules
 }
 
 // export type DatabaseIntegrityRules = {
@@ -42,3 +60,10 @@ export type FirestoreIntegrityConfig = {
 //   // preHook: Hook<T>
 //   // postHook: Hook<T>
 // }
+
+
+// A delete should decrement, delete a document or field
+
+// A create should increment or replicate the document in another collection or create a field
+
+// An update should update another document or the field that was updated
