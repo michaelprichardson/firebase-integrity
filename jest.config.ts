@@ -7,15 +7,20 @@ const packageJson = require("./package.json");
 export default {
   name: packageJson.name,
   displayName: packageJson.name,
+  collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: [
     "text",
     "text-summary",
   ],
   preset: "ts-jest",
+  roots: [
+    '<rootDir>/__tests__',
+    '<rootDir>',
+  ],
   testEnvironment: "node",
   testRegex: [
-    "(/src/__tests__/.*|(\\.|/)(test|spec))\\.(ts)$"
+    "(__tests__\/.*(\\.|\/))(test.ts)$"
   ],
   transform: {
     "^.+\\.ts$": "ts-jest"
