@@ -1,7 +1,7 @@
 import {
   getIdFromContext,
   replaceKeyWithValue,
-} from '../../common/text';
+} from '../../src/common/text';
 
 describe('getIdFromContext', () => {
   
