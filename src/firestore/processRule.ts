@@ -6,15 +6,15 @@ import {
 } from 'firebase-functions';
 import { firestore as firestoreAdmin } from 'firebase-admin';
 import { getIdFromContext, replaceKeyWithValue } from 'src/common/text';
-import { Config } from '../common/config';
-import { FirestoreEventType, BaseRule, Action } from '../common/rules';
+import { Config } from 'src/common/config';
+import { FirestoreEventType, BaseRule, Action } from 'src/common/rules';
 
 export const processFirestoreRule = async (
   firebaseConfig: Config,
   eventType: FirestoreEventType,
   documentPath: string,
   rule: BaseRule,
-  snapshot: firestore.QueryDocumentSnapshot | Change<firestore.QueryDocumentSnapshot>,
+  change: Change<firestore.DocumentSnapshot>,
   context: EventContext,
 ) => {
   // TODO: Need to add some validation in here for all the different cases
@@ -37,13 +37,11 @@ export const processFirestoreRule = async (
       logger.error(new Error('Missing foreign key in update path'));
     }
 
-    if (eventType === FirestoreEventType.OnUpdate) {
-      const snap = snapshot as Change<firestore.QueryDocumentSnapshot>;
-      updateFieldValue = snap.after.get(foreignKey);
-      updateFieldValues = snap.after.data();
+    if (eventType === FirestoreEventType.OnCreate || eventType === FirestoreEventType.OnUpdate) {
+      updateFieldValue = change.after.get(foreignKey);
+      updateFieldValues = change.after.data();
     } else {
-      const snap = snapshot as firestore.QueryDocumentSnapshot;
-      updateFieldValue = snap.get(foreignKey);
+      updateFieldValue = change.before.get(foreignKey);
     }
   }
   

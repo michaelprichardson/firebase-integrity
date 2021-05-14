@@ -4,14 +4,14 @@ import {
   firestore,
   logger
 } from 'firebase-functions';
-import { Config } from '../common/config';
-import { FirestoreIntegrityConfig } from '../common/rules';
-import { processFirestoreRule } from './processRule';
+import { Config } from 'src/common/config';
+import { FirestoreIntegrityConfig } from 'src/common/rules';
+import { processFirestoreRule } from 'src/firestore/processRule';
 
 export const processFirestoreTrigger = async (
   firebaseConfig: Config,
   integrityConfig: FirestoreIntegrityConfig,
-  snapshot: firestore.QueryDocumentSnapshot | Change<firestore.QueryDocumentSnapshot>,
+  change: Change<firestore.DocumentSnapshot>,
   context: EventContext,
 ) => {
   const { firestoreRules, databaseRules, storageRules } = integrityConfig.rules;
@@ -26,7 +26,7 @@ export const processFirestoreTrigger = async (
         integrityConfig.type,
         integrityConfig.documentPath,
         firestoreRule,
-        snapshot,
+        change,
         context,
       ))
     }
