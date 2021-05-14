@@ -5,9 +5,9 @@ import {
   logger
 } from 'firebase-functions';
 import { firestore as firestoreAdmin } from 'firebase-admin';
-import { getIdFromContext, replaceKeyWithValue } from 'src/common/text';
-import { Config } from 'src/common/config';
-import { FirestoreEventType, BaseRule, Action } from 'src/common/rules';
+import { getIdFromContext, replaceKeyWithValue } from '../common/text';
+import { Config } from '../common/config';
+import { FirestoreEventType, BaseRule, Action } from '../common/rules';
 
 export const processFirestoreRule = async (
   firebaseConfig: Config,

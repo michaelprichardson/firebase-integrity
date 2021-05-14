@@ -1,7 +1,7 @@
 import { CloudFunction } from 'firebase-functions';
-import { FirestoreIntegrityConfig, FirestoreEventType } from 'src/common/rules';
-import { Config } from 'src/common/config';
-import { processFirestoreTrigger } from 'src/firestore/processFunction';
+import { FirestoreIntegrityConfig, FirestoreEventType } from '../common/rules';
+import { Config } from '../common/config';
+import { processFirestoreTrigger } from '../firestore/processFunction';
 
 export const createFirestoreTrigger = (firebaseConfig: Config, integrityConfig: FirestoreIntegrityConfig): CloudFunction<any> => {
   return firebaseConfig.functions.firestore.document(integrityConfig.documentPath).onWrite((change, context) => {

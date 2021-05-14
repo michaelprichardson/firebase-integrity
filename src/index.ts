@@ -1,7 +1,7 @@
 import { CloudFunction } from 'firebase-functions';
-import { Config } from 'src/common/config';
-import { FirestoreIntegrityConfig } from 'src/common/rules';
-import { createFirestoreTrigger } from 'src/functions/firestore';
+import { Config } from './common/config';
+import { FirestoreIntegrityConfig } from './common/rules';
+import { createFirestoreTrigger } from './functions/firestore';
 
 const currentConfig: Config = {
   database: null,

@@ -6,7 +6,7 @@ import {
 } from 'firebase-functions';
 import { Config } from 'src/common/config';
 import { FirestoreIntegrityConfig } from 'src/common/rules';
-import { processFirestoreRule } from 'src/firestore/processRule';
+import { processFirestoreRule } from './processRule';
 
 export const processFirestoreTrigger = async (
   firebaseConfig: Config,

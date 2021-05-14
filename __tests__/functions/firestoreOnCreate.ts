@@ -19,7 +19,7 @@ export const incrementOnCreate = createFirestoreIntegrity({
     firestoreRules: [
       {
         action: Action.IncrementField,
-        path: 'incrementCollection/',
+        path: 'incrementCollection/{docId}',
         incrementField: 'tally'
       }
     ]

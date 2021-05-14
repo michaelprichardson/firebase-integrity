@@ -1,10 +1,16 @@
 import { initializeApp, database, firestore } from 'firebase-admin';
 
-process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-process.env.GOOGLE_CLOUD_PROJECT = 'firebase-integrity-emulator';
-process.env.PUBSUB_PROJECT_ID = 'firebase-integrity-emulator';
+const projectId = 'firebase-integrity-emulator';
 
-initializeApp();
+process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+process.env.FIREBASE_DATABASE_EMULATOR_HOST = 'localhost:9000';
+process.env.GOOGLE_CLOUD_PROJECT = projectId;
+process.env.PUBSUB_PROJECT_ID = projectId;
+
+initializeApp({
+  projectId,
+  databaseURL: `https://${projectId}.firebaseio.com`,
+});
 
 module.exports = {
   database,
