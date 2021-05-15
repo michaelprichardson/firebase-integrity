@@ -19,7 +19,7 @@ export const processFirestoreTrigger = async (
   const promises = [];
 
   // Check if there are any rules for Firestore
-  if (firestoreRules.length) {
+  if (firestoreRules) {
     for (const firestoreRule of firestoreRules) {
       promises.push(processFirestoreRule(
         firebaseConfig,
@@ -35,14 +35,14 @@ export const processFirestoreTrigger = async (
   }
 
   // Check if there are any rules for Database
-  if (databaseRules.length) {
+  if (databaseRules) {
     logger.info('TODO: Need to be implemented');
   } else {
     logger.warn('No rules for Database');
   }
 
   // Check if there are any rules for Storage
-  if (storageRules.length) {
+  if (storageRules) {
     logger.info('TODO: Need to be implemented');
   } else {
     logger.warn('No rules for Storage');

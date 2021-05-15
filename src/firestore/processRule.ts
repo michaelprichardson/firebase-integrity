@@ -24,9 +24,13 @@ export const processFirestoreRule = async (
   }
 
   // Get the primary key and create reference to document in rule
-  const primaryId = context[primaryKey];
+  const primaryId = context.params[primaryKey];
   const path = replaceKeyWithValue(rule.path, primaryKey, primaryId);
   const firestoreRef = firebaseConfig.firestore.doc(path);
+
+  console.log(`primaryKey: ${primaryKey}, primaryId: ${primaryId}`)
+  console.log(path)
+  console.log(rule)
 
   // Get the field update value
   let updateFieldValue;
@@ -44,6 +48,9 @@ export const processFirestoreRule = async (
       updateFieldValue = change.before.get(foreignKey);
     }
   }
+
+  console.log(`Rules: ${path}`);
+  console.log(`updateFieldValue: ${updateFieldValue}`);
   
   if (eventType === FirestoreEventType.OnCreate) {
     await processOnCreate(firestoreRef, rule, updateFieldValue);

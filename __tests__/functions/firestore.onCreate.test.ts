@@ -10,6 +10,10 @@ describe('createFirestoreIntegrity - OnCreate', () => {
 
   const docId = 'someRandomId';
 
+  beforeEach(async () => {
+    console.log('Clear Firestore and database');
+  })
+
   it('should increment the file {} when a document is added to {}', async () => {
     const collectionRef = firestore().collection('createCollection').doc(docId);
     const incrementRef = firestore().collection('incrementCollection').doc(docId);
@@ -25,8 +29,10 @@ describe('createFirestoreIntegrity - OnCreate', () => {
     expect(beforeIncrementTally.get('tally')).toBe(0);
 
     // Trigger the increment
-    const snap = testSdk.firestore.makeDocumentSnapshot({}, `createCollection/${docId}`);
-    await wrappedFunction(snap, { params: { docId } });
+    const beforeSnap = testSdk.firestore.makeDocumentSnapshot({}, `createCollection/${docId}`);
+    const afterSnap = testSdk.firestore.makeDocumentSnapshot({ test: 'data' }, `createCollection/${docId}`);
+    const change = testSdk.makeChange(beforeSnap, afterSnap);
+    await wrappedFunction(change, { params: { docId } });
 
     // Test Firestore after trigger
     const afterIncrementTally = await incrementRef.get();
