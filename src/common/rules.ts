@@ -13,9 +13,9 @@ export enum DatabaseEventType {
 }
 
 export enum Action {
-  CreateField,
-  ReplicateDocument,
+  SetForeignKey,
   IncrementField,
+  ReplicateDocument,
   DeleteField,
   DeleteDocument,
   DecrementField,
@@ -33,6 +33,7 @@ export type BaseRule = {
   incrementField?: string
   decrementField?: string
   updateField?: string
+  foreignKey?: string
 };
 
 export type IntegrityRules = {

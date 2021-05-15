@@ -12,6 +12,20 @@ initFirebaseIntegrity({
   functions
 });
 
+export const foreignOnCreate = createFirestoreIntegrity({
+  type: FirestoreEventType.OnCreate,
+  documentPath: 'createCollection/{docId}',
+  rules: {
+    firestoreRules: [
+      {
+        action: Action.SetForeignKey,
+        path: 'updateFieldCollection/{docId}',
+        foreignKey: 'otherId'
+      }
+    ]
+  }
+});
+
 export const incrementOnCreate = createFirestoreIntegrity({
   type: FirestoreEventType.OnCreate,
   documentPath: 'createCollection/{docId}',
@@ -21,6 +35,19 @@ export const incrementOnCreate = createFirestoreIntegrity({
         action: Action.IncrementField,
         path: 'incrementCollection/{docId}',
         incrementField: 'tally'
+      }
+    ]
+  }
+});
+
+export const replicateDocumentOnCreate = createFirestoreIntegrity({
+  type: FirestoreEventType.OnCreate,
+  documentPath: 'createCollection/{docId}',
+  rules: {
+    firestoreRules: [
+      {
+        action: Action.ReplicateDocument,
+        path: 'replicateDocumentCollection/{docId}',
       }
     ]
   }

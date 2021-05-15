@@ -35,25 +35,34 @@ export const processFirestoreRule = async (
   // Get the field update value
   let updateFieldValue;
   let updateFieldValues;
-  if (rule.field || rule.updateField) {
-    const { contains, key: foreignKey } = getIdFromContext(rule.path);
-    if (!contains) {
-      logger.error(new Error('Missing foreign key in update path'));
-    }
 
-    if (eventType === FirestoreEventType.OnCreate || eventType === FirestoreEventType.OnUpdate) {
-      updateFieldValue = change.after.get(foreignKey);
-      updateFieldValues = change.after.data();
-    } else {
-      updateFieldValue = change.before.get(foreignKey);
-    }
+  // Update the field to the key of the created document
+  if (rule.foreignKey && eventType === FirestoreEventType.OnCreate) {
+    updateFieldValue = primaryId;
+  } else if (rule && eventType === FirestoreEventType.OnCreate) {
+    updateFieldValues = change.after.data();
   }
+  
+  // if (rule.field || rule.updateField) {
+  //   const { contains, key: foreignKey } = getIdFromContext(rule.path);
+  //   console.log(`foreignKey ${foreignKey}`)
+  //   if (!contains) {
+  //     logger.error(new Error('Missing foreign key in update path'));
+  //   }
+
+  //   if (eventType === FirestoreEventType.OnUpdate) {
+  //     updateFieldValue = change.after.get(foreignKey);
+  //     updateFieldValues = change.after.data();
+  //   } else {
+  //     updateFieldValue = change.before.get(foreignKey);
+  //   }
+  // }
 
   console.log(`Rules: ${path}`);
   console.log(`updateFieldValue: ${updateFieldValue}`);
   
   if (eventType === FirestoreEventType.OnCreate) {
-    await processOnCreate(firestoreRef, rule, updateFieldValue);
+    await processOnCreate(firestoreRef, rule, updateFieldValue, updateFieldValues);
   } else if (eventType === FirestoreEventType.OnDelete) {
     await processOnDelete(firestoreRef, rule);
   } else if (eventType === FirestoreEventType.OnUpdate) {
@@ -63,12 +72,14 @@ export const processFirestoreRule = async (
   }
 }
 
-const processOnCreate = async (firestore: firestoreAdmin.DocumentReference, rule: BaseRule, updateValue: any) => {
-  if (rule.action === Action.CreateField && rule.field) {
-    await firestore.set({ [rule.field.key]: updateValue }, { merge: true });
+const processOnCreate = async (firestore: firestoreAdmin.DocumentReference, rule: BaseRule, updateValue: any, updateValues: any) => {
+  if (rule.action === Action.SetForeignKey && rule.foreignKey) {
+    await firestore.set({ [rule.foreignKey]: updateValue }, { merge: true });
   } else if (rule.action === Action.IncrementField && rule.incrementField) {
     await firestore.update({ [rule.incrementField]: firestoreAdmin.FieldValue.increment(1) });
-  } else {
+  } else if (rule.action === Action.ReplicateDocument) {
+    await firestore.set(updateValues, { merge: true });
+  }else {
     logger.error(new Error('Invalid action for OnCreate event'));
   }
 }
