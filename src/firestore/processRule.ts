@@ -35,7 +35,11 @@ export const processFirestoreRule = async (
   // Update the field to the key of the created document
   if (rule.foreignKey && eventType === FirestoreEventType.OnCreate) {
     updateFieldValue = primaryId;
-  } else if (rule && eventType === FirestoreEventType.OnCreate) {
+  } else if (eventType === FirestoreEventType.OnCreate) {
+    updateFieldValues = change.after.data();
+  } else if (rule.updateField && eventType === FirestoreEventType.OnUpdate) {
+    updateFieldValue = change.after.get(rule.updateField.snapshotKey);
+  } else if (rule && eventType === FirestoreEventType.OnUpdate) {
     updateFieldValues = change.after.data();
   }
   
@@ -77,7 +81,7 @@ const processOnDelete = async (firestore: firestoreAdmin.DocumentReference, rule
 
 const processOnUpdate = async (firestore: firestoreAdmin.DocumentReference, rule: BaseRule, updateValue: any, updateValues: any) => {
   if (rule.action === Action.UpdateField && rule.updateField) {
-    await firestore.update({ [rule.updateField]: updateValue });
+    await firestore.update({ [rule.updateField.updateKey]: updateValue });
   } else if (rule.action === Action.UpdateDocument) {
     await firestore.update(updateValues);
   } else {

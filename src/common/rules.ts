@@ -26,13 +26,12 @@ export enum Action {
 export type BaseRule = {
   action: Action
   path: string
-  field?: {
-    key: string
-    value: string
-  }
   incrementField?: string
   decrementField?: string
-  updateField?: string
+  updateField?: {
+    updateKey: string
+    snapshotKey: string
+  }
   foreignKey?: string
 };
 
