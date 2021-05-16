@@ -1,8 +1,8 @@
-import { database, firestore } from 'firebase-admin';
-import { testSdk } from '../../src/common/test';
+import { firestore } from 'firebase-admin';
+import { testSdk, cleanFirestore } from '../../src/common/test';
 import {
-  incrementOnCreate,
   foreignOnCreate,
+  incrementOnCreate,
   replicateDocumentOnCreate,
 } from './firestoreOnCreate';
 
@@ -11,7 +11,7 @@ describe('createFirestoreIntegrity - OnCreate', () => {
   const docId = 'someRandomId';
 
   beforeEach(async () => {
-    console.log('Clear Firestore and database');
+    await cleanFirestore();
   })
 
   it('should create the foreign key in the updateFieldCollection document when a document is added to createCollection', async () => {

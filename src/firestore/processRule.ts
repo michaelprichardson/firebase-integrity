@@ -27,11 +27,7 @@ export const processFirestoreRule = async (
   const primaryId = context.params[primaryKey];
   const path = replaceKeyWithValue(rule.path, primaryKey, primaryId);
   const firestoreRef = firebaseConfig.firestore.doc(path);
-
-  console.log(`primaryKey: ${primaryKey}, primaryId: ${primaryId}`)
-  console.log(path)
-  console.log(rule)
-
+  
   // Get the field update value
   let updateFieldValue;
   let updateFieldValues;
@@ -42,24 +38,6 @@ export const processFirestoreRule = async (
   } else if (rule && eventType === FirestoreEventType.OnCreate) {
     updateFieldValues = change.after.data();
   }
-  
-  // if (rule.field || rule.updateField) {
-  //   const { contains, key: foreignKey } = getIdFromContext(rule.path);
-  //   console.log(`foreignKey ${foreignKey}`)
-  //   if (!contains) {
-  //     logger.error(new Error('Missing foreign key in update path'));
-  //   }
-
-  //   if (eventType === FirestoreEventType.OnUpdate) {
-  //     updateFieldValue = change.after.get(foreignKey);
-  //     updateFieldValues = change.after.data();
-  //   } else {
-  //     updateFieldValue = change.before.get(foreignKey);
-  //   }
-  // }
-
-  console.log(`Rules: ${path}`);
-  console.log(`updateFieldValue: ${updateFieldValue}`);
   
   if (eventType === FirestoreEventType.OnCreate) {
     await processOnCreate(firestoreRef, rule, updateFieldValue, updateFieldValues);
@@ -85,12 +63,13 @@ const processOnCreate = async (firestore: firestoreAdmin.DocumentReference, rule
 }
 
 const processOnDelete = async (firestore: firestoreAdmin.DocumentReference, rule: BaseRule) => {
-  if (rule.action === Action.DeleteField && rule.updateField) {
-    await firestore.update({ [rule.updateField]: firestoreAdmin.FieldValue.delete });
-  } else if (rule.action === Action.DeleteDocument) {
-    await firestore.delete();
+  console.log(rule)
+  if (rule.action === Action.SetForeignKey && rule.foreignKey) {
+    await firestore.update({ [rule.foreignKey]: firestoreAdmin.FieldValue.delete() });
   } else if (rule.action === Action.DecrementField && rule.decrementField) {
     await firestore.update({ [rule.decrementField]: firestoreAdmin.FieldValue.increment(-1) });
+  } else if (rule.action === Action.DeleteDocument) {
+    await firestore.delete();
   } else {
     logger.error(new Error('Invalid action for OnDelete event'));
   }
