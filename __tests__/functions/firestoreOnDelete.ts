@@ -12,15 +12,20 @@ initFirebaseIntegrity({
   functions
 });
 
-export const foreignOnDelete = createFirestoreIntegrity({
+export const setForeignKeyWhereOnDelete = createFirestoreIntegrity({
   type: FirestoreEventType.OnDelete,
   documentPath: 'deleteCollection/{docId}',
   rules: {
     firestoreRules: [
       {
         action: Action.SetForeignKey,
-        path: 'updateFieldCollection/{docId}',
-        foreignKey: 'otherId'
+        path: 'updateFieldCollection',
+        foreignKey: 'otherId',
+        where: {
+          fieldPath: '',
+          operation: '==',
+          value: '',
+        }
       }
     ]
   }
@@ -40,14 +45,19 @@ export const decrementOnDelete = createFirestoreIntegrity({
   }
 });
 
-export const removeDocumentOnDelete = createFirestoreIntegrity({
+export const deleteDocumentWhereOnDelete = createFirestoreIntegrity({
   type: FirestoreEventType.OnDelete,
   documentPath: 'deleteCollection/{docId}',
   rules: {
     firestoreRules: [
       {
         action: Action.DeleteDocument,
-        path: 'deletedDocumentCollection/{docId}',
+        path: 'deletedDocumentCollection',
+        where: {
+          fieldPath: '',
+          operation: '==',
+          value: '',
+        }
       }
     ]
   }

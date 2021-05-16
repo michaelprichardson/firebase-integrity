@@ -12,7 +12,7 @@ initFirebaseIntegrity({
   functions
 });
 
-export const updateFieldOnUpdate = createFirestoreIntegrity({
+export const updateFieldWhereOnUpdate = createFirestoreIntegrity({
   type: FirestoreEventType.OnUpdate,
   documentPath: 'updateCollection/{docId}',
   rules: {
@@ -20,24 +20,46 @@ export const updateFieldOnUpdate = createFirestoreIntegrity({
       {
         action: Action.UpdateField,
         path: 'updatedFieldCollection/{docId}',
-        updateField: {
+        updateField: [{
           updateKey: 'updated',
-          snapshotKey: 'test'
+          snapshotKey: 'test',
+        }],
+        where: {
+          fieldPath: '',
+          operation: '==',
+          value: '',
         }
       }
     ]
   }
 });
 
-export const updateDocumentOnUpdate = createFirestoreIntegrity({
+export const updateFieldSnapshotOnUpdate = createFirestoreIntegrity({
   type: FirestoreEventType.OnUpdate,
   documentPath: 'updateCollection/{docId}',
   rules: {
     firestoreRules: [
       {
-        action: Action.UpdateDocument,
-        path: 'updatedDocumentCollection/{docId}',
+        action: Action.UpdateField,
+        path: 'updatedFieldCollection/{snapshot.docId}', // docId == snapshot.id
+        updateField: [{
+          updateKey: 'updated',
+          snapshotKey: 'test',
+        }]
       }
     ]
   }
 });
+
+// export const updateDocumentOnUpdate = createFirestoreIntegrity({
+//   type: FirestoreEventType.OnUpdate,
+//   documentPath: 'updateCollection/{docId}',
+//   rules: {
+//     firestoreRules: [
+//       {
+//         action: Action.UpdateDocument,
+//         path: 'updatedDocumentCollection/{docId}',
+//       }
+//     ]
+//   }
+// });

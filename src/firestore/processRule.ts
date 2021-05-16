@@ -5,7 +5,7 @@ import {
   logger
 } from 'firebase-functions';
 import { firestore as firestoreAdmin } from 'firebase-admin';
-import { getIdFromContext, replaceKeyWithValue } from '../common/text';
+import { extractVariableFromPath, replaceKeyWithValue } from '../common/text';
 import { Config } from '../common/config';
 import { FirestoreEventType, BaseRule, Action } from '../common/rules';
 
@@ -18,7 +18,7 @@ export const processFirestoreRule = async (
   context: EventContext,
 ) => {
   // TODO: Need to add some validation in here for all the different cases
-  const { contains, key: primaryKey } = getIdFromContext(documentPath);
+  const { contains, key: primaryKey } = extractVariableFromPath(documentPath);
   if (!contains) {
     throw new Error('Missing primary key from document path');
   }

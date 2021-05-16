@@ -12,19 +12,19 @@ initFirebaseIntegrity({
   functions
 });
 
-export const foreignOnCreate = createFirestoreIntegrity({
-  type: FirestoreEventType.OnCreate,
-  documentPath: 'createCollection/{docId}',
-  rules: {
-    firestoreRules: [
-      {
-        action: Action.SetForeignKey,
-        path: 'updateFieldCollection/{docId}',
-        foreignKey: 'otherId'
-      }
-    ]
-  }
-});
+// export const foreignOnCreate = createFirestoreIntegrity({
+//   type: FirestoreEventType.OnCreate,
+//   documentPath: 'createCollection/{docId}',
+//   rules: {
+//     firestoreRules: [
+//       {
+//         action: Action.SetForeignKey,
+//         path: 'updateFieldCollection/{docId}',
+//         foreignKey: 'otherId'
+//       }
+//     ]
+//   }
+// });
 
 export const incrementOnCreate = createFirestoreIntegrity({
   type: FirestoreEventType.OnCreate,
@@ -40,15 +40,15 @@ export const incrementOnCreate = createFirestoreIntegrity({
   }
 });
 
-export const replicateDocumentOnCreate = createFirestoreIntegrity({
-  type: FirestoreEventType.OnCreate,
-  documentPath: 'createCollection/{docId}',
-  rules: {
-    firestoreRules: [
-      {
-        action: Action.ReplicateDocument,
-        path: 'replicateDocumentCollection/{docId}',
-      }
-    ]
-  }
-});
+// export const replicateDocumentOnCreate = createFirestoreIntegrity({
+//   type: FirestoreEventType.OnCreate,
+//   documentPath: 'createCollection/{docId}',
+//   rules: {
+//     firestoreRules: [
+//       {
+//         action: Action.ReplicateDocument,
+//         path: 'replicateDocumentCollection/{docId}',
+//       }
+//     ]
+//   }
+// });

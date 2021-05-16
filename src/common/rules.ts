@@ -28,11 +28,16 @@ export type BaseRule = {
   path: string
   incrementField?: string
   decrementField?: string
-  updateField?: {
+  updateField?: Array<{
     updateKey: string
     snapshotKey: string
-  }
+  }>
   foreignKey?: string
+  where?: {
+    fieldPath: string,
+    operation: string,
+    value: any,
+  }
 };
 
 export type IntegrityRules = {
@@ -51,16 +56,6 @@ export type FirestoreIntegrityConfig = {
   documentPath: string
   rules: IntegrityRules
 }
-
-// export type DatabaseIntegrityRules = {
-//   type: RuleType
-//   database: Rule[]
-//   firestore: Rule[]
-//   storage: Rule[]
-//   // preHook: Hook<T>
-//   // postHook: Hook<T>
-// }
-
 
 // A delete should decrement, delete a document or field
 

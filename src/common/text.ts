@@ -1,10 +1,13 @@
 
-export const getIdFromContext = (context: string): { contains: boolean, key: string } => {
+export const extractVariableFromPath = (context: string, snapshot: boolean = false): { contains: boolean, key: string } => {
   const result = context.match(new RegExp('{(.*?)}', 'g')) || [];
 
   if (result.length > 0) {
     const last = result[result.length - 1];
-    const cleaned = last.replace('{', '').replace('}', '');
+    let cleaned = last.replace('{', '').replace('}', '');
+    if (snapshot) {
+      cleaned.replace('snapshot.', '');
+    }
     return { contains: true, key: cleaned };
   } 
   return { contains: false, key: '' };
