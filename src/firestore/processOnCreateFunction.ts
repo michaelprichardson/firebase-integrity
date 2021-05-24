@@ -5,12 +5,14 @@ import {
   logger
 } from 'firebase-functions';
 import { Config } from 'src/common/config';
-import { FirestoreIntegrityConfig } from 'src/common/rules';
-import { processFirestoreRule } from './processRule';
+import {
+  FirestoreOnCreateIntegrity,
+} from 'src/common/rules';
+import { processOnCreateFirestoreRule } from './processOnCreateRule';
 
-export const processFirestoreTrigger = async (
+export const processOnCreateFirestoreTrigger = async (
   firebaseConfig: Config,
-  integrityConfig: FirestoreIntegrityConfig,
+  integrityConfig: FirestoreOnCreateIntegrity,
   change: Change<firestore.DocumentSnapshot>,
   context: EventContext,
 ) => {
@@ -21,9 +23,8 @@ export const processFirestoreTrigger = async (
   // Check if there are any rules for Firestore
   if (firestoreRules) {
     for (const firestoreRule of firestoreRules) {
-      promises.push(processFirestoreRule(
+      promises.push(processOnCreateFirestoreRule(
         firebaseConfig,
-        integrityConfig.type,
         integrityConfig.documentPath,
         firestoreRule,
         change,

@@ -1,9 +1,9 @@
-import { CloudFunction, logger } from 'firebase-functions';
-import { FirestoreIntegrityConfig, FirestoreEventType } from '../common/rules';
+import { CloudFunction } from 'firebase-functions';
+import { FirestoreOnCreateIntegrity, FirestoreOnDeleteIntegrity, FirestoreOnUpdateIntegrity } from '../common/rules';
 import { Config } from '../common/config';
-import { processFirestoreTrigger } from '../firestore/processFunction';
+import { processOnCreateFirestoreTrigger } from '../firestore/processOnCreateFunction';
 
-export const createFirestoreTrigger = (firebaseConfig: Config, integrityConfig: FirestoreIntegrityConfig): CloudFunction<any> => {
+export const createFirestoreTrigger = (firebaseConfig: Config, integrityConfig: FirestoreOnCreateIntegrity | FirestoreOnDeleteIntegrity | FirestoreOnUpdateIntegrity): CloudFunction<any> => {
   return firebaseConfig.functions.firestore.document(integrityConfig.documentPath).onWrite((change, context) => {
 
     const isCreate = !change.before.exists
@@ -12,12 +12,17 @@ export const createFirestoreTrigger = (firebaseConfig: Config, integrityConfig: 
     
     console.log(`isCreate ${isCreate} isDelete ${isDelete} isUpdate ${isUpdate}`);
 
-    if (isCreate && integrityConfig.type === FirestoreEventType.OnCreate) {
-      return processFirestoreTrigger(firebaseConfig, integrityConfig, change, context);
-    } else if (isDelete && integrityConfig.type === FirestoreEventType.OnDelete) {
-      return processFirestoreTrigger(firebaseConfig, integrityConfig, change, context);
-    } else if (isUpdate && integrityConfig.type === FirestoreEventType.OnUpdate) {
-      return processFirestoreTrigger(firebaseConfig, integrityConfig, change, context);
+    if (isCreate) {
+      return processOnCreateFirestoreTrigger(
+        firebaseConfig,
+        integrityConfig as FirestoreOnCreateIntegrity,
+        change,
+        context
+      );
+    } else if (isDelete) {
+      // return processFirestoreTrigger(firebaseConfig, integrityConfig, change, context);
+    } else if (isUpdate) {
+      // return processFirestoreTrigger(firebaseConfig, integrityConfig, change, context);
     }
   });
 }
